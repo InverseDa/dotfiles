@@ -1,0 +1,60 @@
+#! /bin/sh
+
+# ===== xrandr configuration ======
+xrandr --output HDMI-0 --mode 1920x1080 --rate 144
+
+# ======= Initialize sxhkd ========
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# ====== Bspwm Configuration ======
+
+bspc monitor -d 1 2 3 4 5
+
+bspc config border_width         0
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+bspc config border_radius	 12.0
+# For 144hz
+bspc config pointer_motion_interval 7ms
+
+# mouse control
+# Set mouse 1 to move floating windows:
+bspc config pointer_action1 move
+
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+bspc rule -a steam desktop=$urDesktopName follow=no
+
+bspc config normal_border_color "#44475a"
+bspc config active_border_color "#bd93f9"
+bspc config focused_border_color "#ff79c6"
+bspc config presel_feedback_color "#6272a4"
+
+# ====== Applications Launcher =====
+
+#~/.config/polybar/default/launch.sh
+~/.config/polybar/launch.sh --hack
+#~/.config/polybar/candy/launch.sh
+fcitx5 &
+picom --config ~/.config/picom/picom.conf &
+~/.config/dunst/launchdunst.sh & 
+feh --bg-fill $HOME/.config/wallpapers/wallhaven-zyymey.png
+
+# ========= Volume unmute =========
+amixer sset Master unmute
+amixer sset Speaker unmute
+amixer sset Headphone unmute
+
+# ======= X Config Loading ========
+xrdb ~/.Xresources
+
+# ====== Clash Configuration ======
+wget -O /home/miaokeda/.config/clash/config.yaml https://api.prprcloud.life/clash/772/wwljr0jAb0/
+systemctl restart clash
+
